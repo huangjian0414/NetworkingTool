@@ -16,7 +16,7 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    // test
     [kNetworingTool setUpConfig:^(NetworkingConfig *config) {
         config.generalServer=@"";
         config.showRequestLog=YES;
