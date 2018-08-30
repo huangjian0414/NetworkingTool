@@ -104,7 +104,7 @@
     [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
     if (networkingRequest.type==HttpMethod_POST||networkingRequest.type==HttpMethod_PUT) {
         NSData *jsonData;
-        if (networkingRequest.params &&[NSJSONSerialization isValidJSONObject:networkingRequest.params]) {
+        if (networkingRequest.params &&[NSJSONSerialization isValidJSONObject:networkingRequest.params]&&networkingRequest.params.count>0) {
             jsonData = [[self dealWithParam:networkingRequest.params] dataUsingEncoding:NSUTF8StringEncoding];
             [request  setHTTPBody:jsonData];
         }
@@ -117,7 +117,7 @@
     if (type==HttpMethod_GET||type==HttpMethod_DELETE) {
         NSString *path=self.generalServer;
         path=[NSString stringWithFormat:@"%@%@",path,api];
-        if (params) {
+        if (params&&params.count>0) {
             NSString *param=[self dealWithParam:params];
             path=[NSString stringWithFormat:@"%@?%@",path,param];
         }
@@ -183,7 +183,9 @@
         
         [result appendString:str];
     }];
-    
+    if (result.length==0) {
+        return nil;
+    }
     return [result substringWithRange:NSMakeRange(0, result.length-1)];
     
 }
