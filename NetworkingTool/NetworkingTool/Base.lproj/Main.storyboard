@@ -19,21 +19,49 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xgH-KI-L9e">
-                                <rect key="frame" x="147.5" y="323.5" width="80" height="40"/>
+                                <rect key="frame" x="147.5" y="477" width="80" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="h7n-pQ-Qfm"/>
                                     <constraint firstAttribute="width" constant="80" id="t5j-r9-D2q"/>
                                 </constraints>
                                 <state key="normal" title="Button"/>
                             </button>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="qIs-t8-SZk">
+                                <rect key="frame" x="28" y="80" width="319" height="31"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Iqr-L9-6dZ"/>
+                                </constraints>
+                            </slider>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="hxf-0X-5na">
+                                <rect key="frame" x="28" y="140" width="319" height="31"/>
+                            </slider>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="NME-qR-xcW">
+                                <rect key="frame" x="28" y="200" width="319" height="31"/>
+                            </slider>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="NME-qR-xcW" firstAttribute="height" secondItem="hxf-0X-5na" secondAttribute="height" id="5Iz-vT-9zJ"/>
+                            <constraint firstItem="hxf-0X-5na" firstAttribute="height" secondItem="qIs-t8-SZk" secondAttribute="height" id="I37-db-Cp8"/>
+                            <constraint firstItem="NME-qR-xcW" firstAttribute="trailing" secondItem="hxf-0X-5na" secondAttribute="trailing" id="LXt-ij-BEc"/>
                             <constraint firstItem="xgH-KI-L9e" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="PWn-yL-vHd"/>
-                            <constraint firstItem="xgH-KI-L9e" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="d3G-Pe-vV2"/>
+                            <constraint firstItem="NME-qR-xcW" firstAttribute="top" secondItem="hxf-0X-5na" secondAttribute="bottom" constant="30" id="Rai-ls-hRO"/>
+                            <constraint firstItem="hxf-0X-5na" firstAttribute="leading" secondItem="qIs-t8-SZk" secondAttribute="leading" id="U5H-7A-iOn"/>
+                            <constraint firstItem="NME-qR-xcW" firstAttribute="leading" secondItem="hxf-0X-5na" secondAttribute="leading" id="bpN-8D-g85"/>
+                            <constraint firstItem="hxf-0X-5na" firstAttribute="trailing" secondItem="qIs-t8-SZk" secondAttribute="trailing" id="cUS-T0-EVn"/>
+                            <constraint firstItem="hxf-0X-5na" firstAttribute="top" secondItem="qIs-t8-SZk" secondAttribute="bottom" constant="30" id="kca-tO-oOA"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="xgH-KI-L9e" secondAttribute="bottom" constant="150" id="lv8-E6-Apa"/>
+                            <constraint firstItem="qIs-t8-SZk" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="mkN-hH-sK7"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="qIs-t8-SZk" secondAttribute="trailing" constant="30" id="ulq-Py-ct2"/>
+                            <constraint firstItem="qIs-t8-SZk" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="60" id="xLd-hm-mPI"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="firstSlider" destination="qIs-t8-SZk" id="3VM-CA-M5P"/>
+                        <outlet property="secondSlider" destination="hxf-0X-5na" id="pYu-gm-GWD"/>
+                        <outlet property="thirtySlider" destination="NME-qR-xcW" id="Fv6-03-WR6"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>

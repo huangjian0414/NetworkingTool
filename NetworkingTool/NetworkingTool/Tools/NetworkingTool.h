@@ -4,10 +4,12 @@
 
 #import <Foundation/Foundation.h>
 #import "NetworkingRequest.h"
+#import "NetworkingDownloadModel.h"
+@class NetworkingProgressModel;
 typedef void(^Success)(id responseObject);
 typedef void(^Failure)(NSError *error);
 
-typedef void(^DownLoadSuccess)(NSURL *location);
+typedef void(^DownLoadSuccess)(NSURL *location,NetworkingProgressModel * model);
 typedef void(^DownLoadFailure)(NSError *error);
 
 @class NetworkingConfig;

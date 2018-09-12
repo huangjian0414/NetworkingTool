@@ -9,6 +9,9 @@
 #import "ViewController.h"
 #import "NetworkingTool.h"
 @interface ViewController ()
+@property (weak, nonatomic) IBOutlet UISlider *firstSlider;
+@property (weak, nonatomic) IBOutlet UISlider *secondSlider;
+@property (weak, nonatomic) IBOutlet UISlider *thirtySlider;
 
 @end
 
@@ -31,27 +34,45 @@
 //
 //    }];
 
-   
     [kNetworingTool sendBigDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
-        request.url = @"http://img.zcool.cn/community/0117e2571b8b246ac72538120dd8a4.jpg@1280w_1l_2o_100sh.jpg";
-    }] success:^(NSURL *location) {
-        NSLog(@"1111111111111");
+        request.url = @"http://video.yueshichina.com/video/2016/0812/pengyuyan.mp4";
+    }] success:^(NSURL *location, NetworkingProgressModel *model) {
+        NSLog(@"1111111--%@--%lf",location,1.0 *  model.totalBytesWritten/ model.totalBytesExpectedToWrite);
+        if (location) {
+            
+        }else
+        {
+            self.firstSlider.value = model.progress;
+        }
     } failure:^(NSError *error) {
-        
+        NSLog(@"1111111- %@",error);
     }];
     [kNetworingTool sendBigDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
-        request.url = @"http://img.zcool.cn/community/0117e2571b8b246ac72538120dd8a4.jpg@1280w_1l_2o_100sh.jpg";
-    }] success:^(NSURL *location) {
-        NSLog(@"222222222222");
+        request.url = @"http://video.yueshichina.com/video/2016/0812/youzi.mp4";
+    }] success:^(NSURL *location, NetworkingProgressModel *model) {
+        NSLog(@"2222222--%@--%lf",location,(1.0 *  model.totalBytesWritten/ model.totalBytesExpectedToWrite));
+        if (location) {
+            //下载完成
+        }else
+        {
+           self.secondSlider.value = model.progress;
+        }
     } failure:^(NSError *error) {
-        
+
     }];
+    
     [kNetworingTool sendBigDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
-        request.url = @"http://img.zcool.cn/community/0117e2571b8b246ac72538120dd8a4.jpg@1280w_1l_2o_100sh.jpg";
-    }] success:^(NSURL *location) {
-        NSLog(@"33333333333");
+        request.url = @"http://video.yueshichina.com/video/2016/0812/liaofan.mp4";
+    }] success:^(NSURL *location, NetworkingProgressModel *model) {
+        NSLog(@"3333333--%@--%lf",location,1.0 *  model.totalBytesWritten/ model.totalBytesExpectedToWrite);
+        if (location) {
+            
+        }else
+        {
+            self.thirtySlider.value = model.progress;
+        }
     } failure:^(NSError *error) {
-        
+
     }];
 }
 

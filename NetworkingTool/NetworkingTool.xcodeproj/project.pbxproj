@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7E01BE752148B45000EB16B3 /* NetworkingDownloadModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E01BE742148B45000EB16B3 /* NetworkingDownloadModel.m */; };
 		7E282625213516E3002E8088 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E282624213516E3002E8088 /* AppDelegate.m */; };
 		7E282628213516E4002E8088 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E282627213516E3002E8088 /* ViewController.m */; };
 		7E28262B213516E4002E8088 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7E282629213516E4002E8088 /* Main.storyboard */; };
@@ -18,6 +19,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7E01BE732148B45000EB16B3 /* NetworkingDownloadModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NetworkingDownloadModel.h; sourceTree = "<group>"; };
+		7E01BE742148B45000EB16B3 /* NetworkingDownloadModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NetworkingDownloadModel.m; sourceTree = "<group>"; };
 		7E282620213516E3002E8088 /* NetworkingTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NetworkingTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E282623213516E3002E8088 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		7E282624213516E3002E8088 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -85,6 +88,8 @@
 				7E28263A2135175F002E8088 /* NetworkingTool.m */,
 				7E28263D2135175F002E8088 /* NetworkingRequest.h */,
 				7E28263B2135175F002E8088 /* NetworkingRequest.m */,
+				7E01BE732148B45000EB16B3 /* NetworkingDownloadModel.h */,
+				7E01BE742148B45000EB16B3 /* NetworkingDownloadModel.m */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -162,6 +167,7 @@
 				7E282628213516E4002E8088 /* ViewController.m in Sources */,
 				7E28263F21351760002E8088 /* NetworkingRequest.m in Sources */,
 				7E28263E21351760002E8088 /* NetworkingTool.m in Sources */,
+				7E01BE752148B45000EB16B3 /* NetworkingDownloadModel.m in Sources */,
 				7E282633213516E5002E8088 /* main.m in Sources */,
 				7E282625213516E3002E8088 /* AppDelegate.m in Sources */,
 			);

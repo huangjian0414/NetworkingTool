@@ -3,7 +3,8 @@
 //
 
 #import "NetworkingTool.h"
-
+#import <CommonCrypto/CommonCrypto.h>
+#import "NetworkingDownloadModel.h"
 @interface NetworkingTool ()<NSURLSessionDownloadDelegate>
 @property (nonatomic,copy)Success success;
 @property (nonatomic,copy)Failure failure;
@@ -20,6 +21,9 @@
 @property (nonatomic, strong, nullable) NSOperationQueue *downloadRecieveQueue;
 
 @property (nonatomic,strong)NSLock *downLoadlock;
+
+/** 保存所有下载相关信息 */
+@property (nonatomic, strong) NSMutableDictionary *downloadModels;
 @end
 @implementation NetworkingTool
 -(NSLock *)downLoadlock
@@ -29,6 +33,15 @@
     }
     return _downLoadlock;
 }
+
+-(NSMutableDictionary *)downloadModels
+{
+    if (!_downloadModels) {
+        _downloadModels=[NSMutableDictionary dictionary];
+    }
+    return _downloadModels;
+}
+
 +(instancetype)sharedInstance
 {
     static NetworkingTool *instance;
@@ -43,7 +56,7 @@
         instance.requestQueue=dispatch_queue_create("request_queue", DISPATCH_QUEUE_CONCURRENT);
         NSOperationQueue *queue = [[NSOperationQueue alloc]init];
         queue.name=@"download_queue";
-        queue.maxConcurrentOperationCount=1;
+        //queue.maxConcurrentOperationCount=1;
         instance.downloadQueue=queue;
         NSOperationQueue *downloadRecieveQueue = [[NSOperationQueue alloc]init];
         downloadRecieveQueue.name=@"downloadRecieve_queue";
@@ -79,7 +92,7 @@
     }
     self.showRequestLog = config.showRequestLog;
 }
-// 无进度下载
+//MARK: - 无进度下载
 -(void)sendDownLoadRequest:(NetworkingRequest *)request success:(DownLoadSuccess)success failure:(DownLoadFailure)failure
 {
     [self.noProgressDownloadQueue addOperationWithBlock:^{
@@ -100,7 +113,7 @@
                 }else
                 {
                     if (success) {
-                        success(location);
+                        success(location,nil);
                     }
                 }
             }
@@ -109,21 +122,27 @@
         [task resume];
     }];
 }
-//有进度 下载
+//MARK: - 有进度 下载
 -(void)sendBigDownLoadRequest:(NetworkingRequest *)request success:(DownLoadSuccess)success failure:(DownLoadFailure)failure
 {
+    NetworkingDownloadModel *model=[[NetworkingDownloadModel alloc]init];
+    model.success = success;
+    model.failure = failure;
+    model.url = request.url;
+    NSURL *url = [NSURL URLWithString:request.url];
+    NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
+    
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    //后面队列的作用  如果给子线程队列则协议方法在子线程中执行 给主线程队列就在主线程中执行
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:self.downloadRecieveQueue];
+    
+    NSURLSessionDownloadTask *task = [session downloadTaskWithRequest:req];
+    NSUInteger taskIdentifier = [self getArc4Random];
+    [task setValue:@(taskIdentifier) forKeyPath:@"taskIdentifier"];
+    model.task = task;
+    [self.downloadModels setObject:model forKey:@(taskIdentifier).stringValue];
+    
     [self.downloadQueue addOperationWithBlock:^{
-        [self.downLoadlock lock];
-        self.downloadSuccess = success;
-        self.downloadFailure = failure;
-        NSURL *url = [NSURL URLWithString:request.url];
-        NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
-        
-        NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-        //后面队列的作用  如果给子线程队列则协议方法在子线程中执行 给主线程队列就在主线程中执行
-        NSURLSession *session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:self.downloadRecieveQueue];
-        
-        NSURLSessionDownloadTask *task = [session downloadTaskWithRequest:req];
         [task resume];
     }];
 }
@@ -301,7 +320,10 @@
 //MARK: - 下载完成
 - (void)URLSession:(nonnull NSURLSession *)session downloadTask:(nonnull NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(nonnull NSURL *)location {
     NSLog(@"location -- %@",location);
-    self.downloadSuccess(location);
+    dispatch_async(self.callbackQueue, ^{
+        NetworkingDownloadModel *model =[self.downloadModels objectForKey:@(downloadTask.taskIdentifier).stringValue];
+        model.success(location, nil);
+    });
 }
 //MARK: - 下载进度
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask
@@ -310,6 +332,15 @@
 totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
 {
     NSLog(@"%lf",1.0 * totalBytesWritten / totalBytesExpectedToWrite);
+    NetworkingProgressModel *progressModel =[[NetworkingProgressModel alloc]init];
+    progressModel.bytesWritten=bytesWritten;
+    progressModel.totalBytesWritten=totalBytesWritten;
+    progressModel.totalBytesExpectedToWrite=totalBytesExpectedToWrite;
+    progressModel.progress = 1.0 * totalBytesWritten / totalBytesExpectedToWrite;
+    NetworkingDownloadModel *model =[self.downloadModels objectForKey:@(downloadTask.taskIdentifier).stringValue];
+    dispatch_async(self.callbackQueue, ^{
+        model.success(nil, progressModel);
+    });
 }
 //MARK: - 重新恢复下载的代理方法
 -(void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask
@@ -319,7 +350,28 @@ didResumeAtOffset:(int64_t)fileOffset expectedTotalBytes:(int64_t)expectedTotalB
 //MARK: - 请求完成，错误调用的代理方法
 -(void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error{
     NSLog(@"error --%@",error);
+    if (error) {
+        dispatch_async(self.callbackQueue, ^{
+            NetworkingDownloadModel *model =[self.downloadModels objectForKey:@(task.taskIdentifier).stringValue];
+            if (model&&model.failure) {
+                model.failure(error);
+            }
+        });
+    }
+    [self.downLoadlock lock];
+    if ([self.downloadModels objectForKey:@(task.taskIdentifier).stringValue]) {
+        [self.downloadModels removeObjectForKey:@(task.taskIdentifier).stringValue];
+    }
     [self.downLoadlock unlock];
+}
+//MARK: - 获取随机数
+-(NSUInteger)getArc4Random
+{
+    NSUInteger arc4 = arc4random() % ((arc4random() % 10000 + arc4random() % 10000));
+    if ([self.downloadModels objectForKey:@(arc4).stringValue]) {
+        return [self getArc4Random];
+    }
+    return  arc4;
 }
 
 @end
