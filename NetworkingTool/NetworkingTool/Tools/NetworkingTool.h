@@ -4,13 +4,9 @@
 
 #import <Foundation/Foundation.h>
 #import "NetworkingRequest.h"
-#import "NetworkingDownloadModel.h"
-@class NetworkingProgressModel;
+
 typedef void(^Success)(id responseObject);
 typedef void(^Failure)(NSError *error);
-
-typedef void(^DownLoadSuccess)(NSURL *location,NetworkingProgressModel * model);
-typedef void(^DownLoadFailure)(NSError *error);
 
 @class NetworkingConfig;
 @interface NetworkingTool : NSObject
@@ -31,10 +27,6 @@ typedef void(^DownLoadFailure)(NSError *error);
 //请求回调统一处理 (多次调用只走最后一个回调)
 -(void)requestUnifiedProcessingOnSuccess:(Success)success onFailure:(Failure)failure;
 
-//无进度下载
--(void)sendDownLoadRequest:(NetworkingRequest *)request success:(DownLoadSuccess)success failure:(DownLoadFailure)failure;
-//有进度下载
--(void)sendBigDownLoadRequest:(NetworkingRequest *)request success:(DownLoadSuccess)success failure:(DownLoadFailure)failure;
 @end
 
 @interface NetworkingConfig : NSObject

@@ -15,7 +15,7 @@ typedef void(^DownLoadFailure)(NSError *error);
 
 @interface NetworkingDownloadModel : NSObject
 @property (nonatomic,copy)NSString *url;
-
+@property (nonatomic,assign)NSUInteger taskId;
 @property(nonatomic,strong)NSURLSessionDownloadTask *task;
 
 @property (nonatomic,copy)DownLoadSuccess success;
@@ -29,4 +29,5 @@ typedef void(^DownLoadFailure)(NSError *error);
 @property (nonatomic,assign)int64_t totalBytesExpectedToWrite;
 
 @property (nonatomic,assign)CGFloat progress;
+@property (nonatomic,assign)NSUInteger taskId;
 @end

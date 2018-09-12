@@ -16,6 +16,7 @@
 		7E282633213516E5002E8088 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E282632213516E5002E8088 /* main.m */; };
 		7E28263E21351760002E8088 /* NetworkingTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E28263A2135175F002E8088 /* NetworkingTool.m */; };
 		7E28263F21351760002E8088 /* NetworkingRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E28263B2135175F002E8088 /* NetworkingRequest.m */; };
+		7ED10221214900A200ADF329 /* NetworingDownloadTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ED10220214900A200ADF329 /* NetworingDownloadTool.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,8 @@
 		7E28263B2135175F002E8088 /* NetworkingRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkingRequest.m; sourceTree = "<group>"; };
 		7E28263C2135175F002E8088 /* NetworkingTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkingTool.h; sourceTree = "<group>"; };
 		7E28263D2135175F002E8088 /* NetworkingRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkingRequest.h; sourceTree = "<group>"; };
+		7ED1021F214900A200ADF329 /* NetworingDownloadTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NetworingDownloadTool.h; sourceTree = "<group>"; };
+		7ED10220214900A200ADF329 /* NetworingDownloadTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NetworingDownloadTool.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +91,8 @@
 				7E28263A2135175F002E8088 /* NetworkingTool.m */,
 				7E28263D2135175F002E8088 /* NetworkingRequest.h */,
 				7E28263B2135175F002E8088 /* NetworkingRequest.m */,
+				7ED1021F214900A200ADF329 /* NetworingDownloadTool.h */,
+				7ED10220214900A200ADF329 /* NetworingDownloadTool.m */,
 				7E01BE732148B45000EB16B3 /* NetworkingDownloadModel.h */,
 				7E01BE742148B45000EB16B3 /* NetworkingDownloadModel.m */,
 			);
@@ -170,6 +175,7 @@
 				7E01BE752148B45000EB16B3 /* NetworkingDownloadModel.m in Sources */,
 				7E282633213516E5002E8088 /* main.m in Sources */,
 				7E282625213516E3002E8088 /* AppDelegate.m in Sources */,
+				7ED10221214900A200ADF329 /* NetworingDownloadTool.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

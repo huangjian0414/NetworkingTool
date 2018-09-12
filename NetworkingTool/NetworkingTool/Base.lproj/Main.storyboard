@@ -24,7 +24,11 @@
                                     <constraint firstAttribute="height" constant="40" id="h7n-pQ-Qfm"/>
                                     <constraint firstAttribute="width" constant="80" id="t5j-r9-D2q"/>
                                 </constraints>
-                                <state key="normal" title="Button"/>
+                                <state key="normal" title="暂停"/>
+                                <state key="selected" title="继续"/>
+                                <connections>
+                                    <action selector="clickBtn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="QAh-KF-jP9"/>
+                                </connections>
                             </button>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="qIs-t8-SZk">
                                 <rect key="frame" x="28" y="80" width="319" height="31"/>

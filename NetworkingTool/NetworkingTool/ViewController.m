@@ -8,14 +8,25 @@
 
 #import "ViewController.h"
 #import "NetworkingTool.h"
+#import "NetworingDownloadTool.h"
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UISlider *firstSlider;
 @property (weak, nonatomic) IBOutlet UISlider *secondSlider;
 @property (weak, nonatomic) IBOutlet UISlider *thirtySlider;
 
+@property (nonatomic,assign)NSUInteger taskID;
 @end
 
 @implementation ViewController
+- (IBAction)clickBtn:(UIButton *)sender {
+    sender.selected=!sender.selected;
+    if (sender.selected) {
+        [kNetworingDownloadTool suspendDownload:self.taskID];
+    }else
+    {
+        [kNetworingDownloadTool continueDownload:self.taskID];
+    }
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -34,46 +45,49 @@
 //
 //    }];
 
-    [kNetworingTool sendBigDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
+    [kNetworingDownloadTool sendBigDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
         request.url = @"http://video.yueshichina.com/video/2016/0812/pengyuyan.mp4";
     }] success:^(NSURL *location, NetworkingProgressModel *model) {
         NSLog(@"1111111--%@--%lf",location,1.0 *  model.totalBytesWritten/ model.totalBytesExpectedToWrite);
         if (location) {
-            
+            //下载完成
         }else
         {
             self.firstSlider.value = model.progress;
         }
     } failure:^(NSError *error) {
-        NSLog(@"1111111- %@",error);
+        
     }];
-    [kNetworingTool sendBigDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
+    
+    [kNetworingDownloadTool sendBigDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
         request.url = @"http://video.yueshichina.com/video/2016/0812/youzi.mp4";
     }] success:^(NSURL *location, NetworkingProgressModel *model) {
-        NSLog(@"2222222--%@--%lf",location,(1.0 *  model.totalBytesWritten/ model.totalBytesExpectedToWrite));
         if (location) {
             //下载完成
         }else
         {
-           self.secondSlider.value = model.progress;
+            self.secondSlider.value = model.progress;
+            self.taskID = model.taskId;
         }
     } failure:^(NSError *error) {
-
+        
     }];
     
-    [kNetworingTool sendBigDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
+    [kNetworingDownloadTool sendBigDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
         request.url = @"http://video.yueshichina.com/video/2016/0812/liaofan.mp4";
     }] success:^(NSURL *location, NetworkingProgressModel *model) {
         NSLog(@"3333333--%@--%lf",location,1.0 *  model.totalBytesWritten/ model.totalBytesExpectedToWrite);
         if (location) {
-            
+            //下载完成
         }else
         {
             self.thirtySlider.value = model.progress;
         }
     } failure:^(NSError *error) {
-
+        
     }];
+    
+
 }
 
 
