@@ -11,10 +11,10 @@
 //  Copyright © 2018年 huangjian. All rights reserved.
 //
 
-#import "NetworingDownloadTool.h"
+#import "NetworkingDownloadTool.h"
 #import "NetworkingDownloadModel.h"
 #import "NetworkingTool.h"
-@interface NetworingDownloadTool ()<NSURLSessionDownloadDelegate>
+@interface NetworkingDownloadTool ()<NSURLSessionDownloadDelegate>
 @property (nonatomic, strong, nullable) NSOperationQueue *downloadQueue;
 
 @property (nonatomic, strong, nullable) NSOperationQueue *noProgressDownloadQueue;
@@ -27,7 +27,7 @@
 @property (nonatomic, strong) NSMutableDictionary *downloadModels;
 
 @end
-@implementation NetworingDownloadTool
+@implementation NetworkingDownloadTool
 -(NSLock *)downLoadlock
 {
     if (!_downLoadlock) {
@@ -45,10 +45,10 @@
 }
 +(instancetype)sharedInstance
 {
-    static NetworingDownloadTool *instance;
+    static NetworkingDownloadTool *instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[NetworingDownloadTool alloc]init];
+        instance = [[NetworkingDownloadTool alloc]init];
         NSOperationQueue *queue = [[NSOperationQueue alloc]init];
         queue.name=@"download_queue";
         //queue.maxConcurrentOperationCount=1;
@@ -162,7 +162,7 @@
 //MARK: - 下载完成
 - (void)URLSession:(nonnull NSURLSession *)session downloadTask:(nonnull NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(nonnull NSURL *)location {
     NSLog(@"location -- %@",location);
-    dispatch_async(kNetworingTool.callbackQueue, ^{
+    dispatch_async(kNetworkingTool.callbackQueue, ^{
         NetworkingDownloadModel *model =[self.downloadModels objectForKey:@(downloadTask.taskIdentifier).stringValue];
         model.success(location, nil);
     });
@@ -181,7 +181,7 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
     progressModel.taskId = downloadTask.taskIdentifier;
     progressModel.progress = 1.0 * totalBytesWritten / totalBytesExpectedToWrite;
     NetworkingDownloadModel *model =[self.downloadModels objectForKey:@(downloadTask.taskIdentifier).stringValue];
-    dispatch_async(kNetworingTool.callbackQueue, ^{
+    dispatch_async(kNetworkingTool.callbackQueue, ^{
         model.success(nil, progressModel);
     });
 }
@@ -194,7 +194,7 @@ didResumeAtOffset:(int64_t)fileOffset expectedTotalBytes:(int64_t)expectedTotalB
 -(void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error{
     NSLog(@"error --%@",error);
     if (error) {
-        dispatch_async(kNetworingTool.callbackQueue, ^{
+        dispatch_async(kNetworkingTool.callbackQueue, ^{
             NetworkingDownloadModel *model =[self.downloadModels objectForKey:@(task.taskIdentifier).stringValue];
             if (model&&model.failure) {
                 model.failure(error);

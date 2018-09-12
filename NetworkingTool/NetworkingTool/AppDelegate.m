@@ -17,7 +17,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // test
-    [kNetworingTool setUpConfig:^(NetworkingConfig *config) {
+    [kNetworkingTool setUpConfig:^(NetworkingConfig *config) {
         config.generalServer=@"";
         config.showRequestLog=YES;
         config.generalHeaders=@{};

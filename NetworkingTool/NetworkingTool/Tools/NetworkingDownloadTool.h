@@ -13,7 +13,7 @@
 typedef void(^DownLoadSuccess)(NSURL *location,NetworkingProgressModel * model);
 typedef void(^DownLoadFailure)(NSError *error);
 
-@interface NetworingDownloadTool : NSObject
+@interface NetworkingDownloadTool : NSObject
 +(instancetype)sharedInstance;
 //无进度下载
 -(void)sendDownLoadRequest:(NetworkingRequest *)request success:(DownLoadSuccess)success failure:(DownLoadFailure)failure;
@@ -25,6 +25,7 @@ typedef void(^DownLoadFailure)(NSError *error);
 -(void)suspendDownload:(NSUInteger)taskId;
 //有进度 取消
 -(void)cancelDownload:(NSUInteger)taskId;
+
 @end
 
-#define kNetworingDownloadTool NetworingDownloadTool.sharedInstance
+#define kNetworkingDownloadTool NetworkingDownloadTool.sharedInstance

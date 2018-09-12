@@ -8,7 +8,7 @@
 
 #import "ViewController.h"
 #import "NetworkingTool.h"
-#import "NetworingDownloadTool.h"
+#import "NetworkingDownloadTool.h"
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UISlider *firstSlider;
 @property (weak, nonatomic) IBOutlet UISlider *secondSlider;
@@ -21,10 +21,10 @@
 - (IBAction)clickBtn:(UIButton *)sender {
     sender.selected=!sender.selected;
     if (sender.selected) {
-        [kNetworingDownloadTool suspendDownload:self.taskID];
+        [kNetworkingDownloadTool suspendDownload:self.taskID];
     }else
     {
-        [kNetworingDownloadTool continueDownload:self.taskID];
+        [kNetworkingDownloadTool continueDownload:self.taskID];
     }
 }
 
@@ -45,7 +45,7 @@
 //
 //    }];
 
-    [kNetworingDownloadTool sendBigDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
+    [kNetworkingDownloadTool sendBigDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
         request.url = @"http://video.yueshichina.com/video/2016/0812/pengyuyan.mp4";
     }] success:^(NSURL *location, NetworkingProgressModel *model) {
         NSLog(@"1111111--%@--%lf",location,1.0 *  model.totalBytesWritten/ model.totalBytesExpectedToWrite);
@@ -59,7 +59,7 @@
         
     }];
     
-    [kNetworingDownloadTool sendBigDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
+    [kNetworkingDownloadTool sendBigDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
         request.url = @"http://video.yueshichina.com/video/2016/0812/youzi.mp4";
     }] success:^(NSURL *location, NetworkingProgressModel *model) {
         if (location) {
@@ -73,7 +73,7 @@
         
     }];
     
-    [kNetworingDownloadTool sendBigDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
+    [kNetworkingDownloadTool sendBigDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
         request.url = @"http://video.yueshichina.com/video/2016/0812/liaofan.mp4";
     }] success:^(NSURL *location, NetworkingProgressModel *model) {
         NSLog(@"3333333--%@--%lf",location,1.0 *  model.totalBytesWritten/ model.totalBytesExpectedToWrite);

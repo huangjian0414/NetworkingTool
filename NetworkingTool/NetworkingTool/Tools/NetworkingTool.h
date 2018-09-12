@@ -57,6 +57,6 @@ typedef void(^Failure)(NSError *error);
 
 
 
-#define kNetworingTool NetworkingTool.sharedInstance
+#define kNetworkingTool NetworkingTool.sharedInstance
 #define SAFE_BLOCK(BlockName, ...) ({ !BlockName ? nil : BlockName(__VA_ARGS__); })
 
