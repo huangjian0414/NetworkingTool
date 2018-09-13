@@ -20,8 +20,6 @@
     [kNetworkingTool setUpConfig:^(NetworkingConfig *config) {
         config.generalServer=@"";
         config.showRequestLog=YES;
-        config.generalHeaders=@{};
-        config.timeoutInterval=30;
         config.callbackQueue=dispatch_get_main_queue();
     }];
     return YES;

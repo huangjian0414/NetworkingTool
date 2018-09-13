@@ -31,20 +31,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-//    [kNetworingTool sendDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
-//        request.url = @"https://fog-pub-test.gz.bcebos.com/fog-pub-app/543db1c62f5a11e8b824fa163e9e4aa3_1531893017444.png";
-//    }] success:^(NSURL *location) {
-//        NSData *data=[NSData dataWithContentsOfURL:location];
-//        UIImage *img = [UIImage imageWithData:data];
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            UIImageView *v =[[UIImageView alloc]initWithImage:img];
-//            v.frame =CGRectMake(30, 30, 100, 100);
-//            [self.view addSubview:v];
-//        });
-//    } failure:^(NSError *error) {
-//
-//    }];
+    [kNetworkingTool sendRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
+        request.api=@"/enduser/login/";
+        request.params=@{@"password": @"12345678", @"account": @"1832193****", @"app_id": @"e55297d89b11de79b3a1a1457d0033"};
+    }] success:^(id responseObject) {
+        
+    } failure:^(NSError *error) {
+        
+    }];
+    
 
+    return ;
     [kNetworkingDownloadTool sendBigDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
         request.url = @"http://video.yueshichina.com/video/2016/0812/pengyuyan.mp4";
     }] success:^(NSURL *location, NetworkingProgressModel *model) {

@@ -84,6 +84,7 @@
 //MARK:Request配置
 -(void)setUpRequest:(NSMutableURLRequest *)request networkingRequest:(NetworkingRequest *)networkingRequest
 {
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
     if (self.generalHeaders) {
         [self.generalHeaders enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
             [request setValue:obj forHTTPHeaderField:key];
@@ -105,7 +106,6 @@
     }
     request.timeoutInterval=self.timeoutInterval;
     request.HTTPMethod=[self getHttpMethodStringWithRequestType:networkingRequest.type];
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
     if (networkingRequest.type==HttpMethod_POST||networkingRequest.type==HttpMethod_PUT) {
         NSData *jsonData;
         if (networkingRequest.params &&[NSJSONSerialization isValidJSONObject:networkingRequest.params]&&networkingRequest.params.count>0) {
