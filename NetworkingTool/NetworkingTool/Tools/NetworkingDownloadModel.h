@@ -16,7 +16,14 @@ typedef void(^DownLoadFailure)(NSError *error);
 @interface NetworkingDownloadModel : NSObject
 @property (nonatomic,copy)NSString *url;
 @property (nonatomic,assign)NSUInteger taskId;
-@property(nonatomic,strong)NSURLSessionDownloadTask *task;
+@property(nonatomic,strong)NSURLSessionDataTask *task;
+
+@property (nonatomic,assign)NSInteger startLength;
+@property (nonatomic,assign)NSInteger fileLength;
+
+@property (nonatomic,assign)BOOL isDirectory;
+@property(nonatomic,copy)NSString *filePath;
+@property (nonatomic, strong)NSFileHandle *fileHandle;
 
 @property (nonatomic,copy)DownLoadSuccess success;
 @property (nonatomic,copy)DownLoadFailure failure;
@@ -24,10 +31,11 @@ typedef void(^DownLoadFailure)(NSError *error);
 
 @interface NetworkingProgressModel : NSObject
 
-@property (nonatomic,assign)int64_t bytesWritten;
-@property (nonatomic,assign)int64_t totalBytesWritten;
-@property (nonatomic,assign)int64_t totalBytesExpectedToWrite;
-
 @property (nonatomic,assign)CGFloat progress;
 @property (nonatomic,assign)NSUInteger taskId;
+
+@property (nonatomic,assign)NSInteger downloadedLength;
+@property (nonatomic,assign)NSInteger fileLength;
+
+@property(nonatomic,copy)NSString *filePath;
 @end

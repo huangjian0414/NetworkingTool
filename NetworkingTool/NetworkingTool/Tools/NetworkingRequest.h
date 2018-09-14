@@ -21,6 +21,8 @@ typedef NS_ENUM(NSInteger,Request_Type)
 @property(nonatomic,strong) NSDictionary *params;
 @property(nonatomic,strong) NSDictionary *headers;
 
+//文件存储的文件夹路径(下载)
+@property (nonatomic,copy)NSString *filePath;
 @property NSTimeInterval timeout;
 
 @property (nonatomic,assign)Request_Type type;

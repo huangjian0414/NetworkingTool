@@ -17,8 +17,10 @@ typedef void(^DownLoadFailure)(NSError *error);
 +(instancetype)sharedInstance;
 //无进度下载
 -(void)sendDownLoadRequest:(NetworkingRequest *)request success:(DownLoadSuccess)success failure:(DownLoadFailure)failure;
-//有进度下载
+//有进度下载 (支持断点下载)
 -(void)sendBigDownLoadRequest:(NetworkingRequest *)request success:(DownLoadSuccess)success failure:(DownLoadFailure)failure;
+
+
 //有进度 继续下载
 -(void)continueDownload:(NSUInteger)taskId;
 //有进度 暂停
