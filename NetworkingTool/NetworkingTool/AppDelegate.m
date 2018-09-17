@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "NetworkingTool.h"
+#import "NetworkingDownloadTool.h"
 @interface AppDelegate ()
 
 @end

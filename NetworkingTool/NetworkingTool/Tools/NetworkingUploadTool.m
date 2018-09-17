@@ -13,6 +13,9 @@
 
 #import "NetworkingUploadTool.h"
 
+@interface NetworkingUploadTool ()<NSURLSessionTaskDelegate>
+
+@end
 @implementation NetworkingUploadTool
 
 +(instancetype)shareInstance
@@ -123,6 +126,16 @@
     }] resume];
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
     return  localResponse;
+}
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend
+{
+    float progress = (float)1.0*totalBytesSent / totalBytesExpectedToSend;
+    NSLog(@"%f",progress);
+}
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
+{
+    NSLog(@"%s",__func__);
 }
 
 @end

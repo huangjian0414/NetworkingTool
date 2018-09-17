@@ -1,8 +1,3 @@
-
-
-
-
-
 //
 //  NetworingDownloadTool.m
 //  NetworkingTool
@@ -12,10 +7,7 @@
 //
 
 #import "NetworkingDownloadTool.h"
-#import "NetworkingDownloadModel.h"
 #import "NetworkingTool.h"
-
-
 
 // 缓存主目录
 #define UserCachesDirectory [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"UserDownLoads"]
@@ -30,7 +22,7 @@
 @property (nonatomic,strong)NSLock *downLoadlock;
 
 /** 保存所有下载相关信息 */
-@property (nonatomic, strong) NSMutableDictionary *downloadModels;
+@property (nonatomic,strong) NSMutableDictionary *downloadModels;
 
 @end
 @implementation NetworkingDownloadTool
@@ -49,6 +41,19 @@
     }
     return _downloadModels;
 }
+
+-(NSURLSession *)session
+{
+    if(!_session)
+    {
+        NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"BackGroundSession"];
+        config.sessionSendsLaunchEvents = YES;
+        //后面队列的作用  如果给子线程队列则协议方法在子线程中执行 给主线程队列就在主线程中执行
+        _session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:self.downloadRecieveQueue];
+    }
+    return _session;
+}
+
 +(instancetype)sharedInstance
 {
     static NetworkingDownloadTool *instance;
@@ -57,6 +62,7 @@
         instance = [[NetworkingDownloadTool alloc]init];
         NSOperationQueue *queue = [[NSOperationQueue alloc]init];
         queue.name=@"download_queue";
+        queue.maxConcurrentOperationCount=10;
         instance.downloadQueue=queue;
         NSOperationQueue *downloadRecieveQueue = [[NSOperationQueue alloc]init];
         downloadRecieveQueue.name=@"downloadRecieve_queue";
@@ -127,11 +133,8 @@
     NSString *range = [NSString stringWithFormat:@"bytes=%zd-", length];
     [req setValue:range forHTTPHeaderField:@"Range"];
     
-    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-    //后面队列的作用  如果给子线程队列则协议方法在子线程中执行 给主线程队列就在主线程中执行
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:self.downloadRecieveQueue];
     //NSURLSessionDownloadTask *task = [session downloadTaskWithRequest:req];
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:req];
+    NSURLSessionDataTask *task = [self.session dataTaskWithRequest:req];
     
     NSUInteger taskIdentifier = [self getArc4Random];
     [task setValue:@(taskIdentifier) forKeyPath:@"taskIdentifier"];
@@ -262,6 +265,7 @@
     dispatch_async(kNetworkingTool.callbackQueue, ^{
         model.success(nil, progressModel);
     });
+    
 }
 
 //MARK: - 请求完成，错误调用的代理方法
