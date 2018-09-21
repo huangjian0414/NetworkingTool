@@ -46,8 +46,7 @@
 {
     if(!_session)
     {
-        NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"BackGroundSession"];
-        config.sessionSendsLaunchEvents = YES;
+        NSURLSessionConfiguration *config =[NSURLSessionConfiguration defaultSessionConfiguration];
         //后面队列的作用  如果给子线程队列则协议方法在子线程中执行 给主线程队列就在主线程中执行
         _session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:self.downloadRecieveQueue];
     }

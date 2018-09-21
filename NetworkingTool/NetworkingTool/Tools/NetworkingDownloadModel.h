@@ -18,6 +18,8 @@ typedef void(^DownLoadFailure)(NSError *error);
 @property (nonatomic,assign)NSUInteger taskId;
 @property(nonatomic,strong)NSURLSessionDataTask *task;
 
+@property(nonatomic,strong)NSURLSessionDownloadTask *bkTask;
+
 @property (nonatomic,assign)NSInteger startLength;
 @property (nonatomic,assign)NSInteger fileLength;
 
@@ -38,4 +40,9 @@ typedef void(^DownLoadFailure)(NSError *error);
 @property (nonatomic,assign)NSInteger fileLength;
 
 @property(nonatomic,copy)NSString *filePath;
+
+@property (nonatomic,assign)int64_t bytesWritten;
+@property (nonatomic,assign)int64_t totalBytesWritten;
+@property (nonatomic,assign)int64_t totalBytesExpectedToWrite;
+
 @end

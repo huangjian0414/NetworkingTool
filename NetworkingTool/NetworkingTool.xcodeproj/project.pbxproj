@@ -16,6 +16,7 @@
 		7E282633213516E5002E8088 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E282632213516E5002E8088 /* main.m */; };
 		7E28263E21351760002E8088 /* NetworkingTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E28263A2135175F002E8088 /* NetworkingTool.m */; };
 		7E28263F21351760002E8088 /* NetworkingRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E28263B2135175F002E8088 /* NetworkingRequest.m */; };
+		7E70E56421533D8500BD2477 /* NetworkingBKdownloadTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E70E56321533D8500BD2477 /* NetworkingBKdownloadTool.m */; };
 		7ED10221214900A200ADF329 /* NetworkingDownloadTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ED10220214900A200ADF329 /* NetworkingDownloadTool.m */; };
 		7ED1022421490C3300ADF329 /* NetworkingUploadTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ED1022321490C3300ADF329 /* NetworkingUploadTool.m */; };
 /* End PBXBuildFile section */
@@ -37,6 +38,8 @@
 		7E28263B2135175F002E8088 /* NetworkingRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkingRequest.m; sourceTree = "<group>"; };
 		7E28263C2135175F002E8088 /* NetworkingTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkingTool.h; sourceTree = "<group>"; };
 		7E28263D2135175F002E8088 /* NetworkingRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkingRequest.h; sourceTree = "<group>"; };
+		7E70E56221533D8400BD2477 /* NetworkingBKdownloadTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NetworkingBKdownloadTool.h; sourceTree = "<group>"; };
+		7E70E56321533D8500BD2477 /* NetworkingBKdownloadTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NetworkingBKdownloadTool.m; sourceTree = "<group>"; };
 		7ED1021F214900A200ADF329 /* NetworkingDownloadTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NetworkingDownloadTool.h; sourceTree = "<group>"; };
 		7ED10220214900A200ADF329 /* NetworkingDownloadTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NetworkingDownloadTool.m; sourceTree = "<group>"; };
 		7ED1022221490C3300ADF329 /* NetworkingUploadTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NetworkingUploadTool.h; sourceTree = "<group>"; };
@@ -96,6 +99,8 @@
 				7E28263B2135175F002E8088 /* NetworkingRequest.m */,
 				7ED1021F214900A200ADF329 /* NetworkingDownloadTool.h */,
 				7ED10220214900A200ADF329 /* NetworkingDownloadTool.m */,
+				7E70E56221533D8400BD2477 /* NetworkingBKdownloadTool.h */,
+				7E70E56321533D8500BD2477 /* NetworkingBKdownloadTool.m */,
 				7E01BE732148B45000EB16B3 /* NetworkingDownloadModel.h */,
 				7E01BE742148B45000EB16B3 /* NetworkingDownloadModel.m */,
 				7ED1022221490C3300ADF329 /* NetworkingUploadTool.h */,
@@ -181,6 +186,7 @@
 			files = (
 				7E282628213516E4002E8088 /* ViewController.m in Sources */,
 				7E28263F21351760002E8088 /* NetworkingRequest.m in Sources */,
+				7E70E56421533D8500BD2477 /* NetworkingBKdownloadTool.m in Sources */,
 				7E28263E21351760002E8088 /* NetworkingTool.m in Sources */,
 				7E01BE752148B45000EB16B3 /* NetworkingDownloadModel.m in Sources */,
 				7ED1022421490C3300ADF329 /* NetworkingUploadTool.m in Sources */,
