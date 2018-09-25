@@ -96,14 +96,15 @@
     NetworkingDownloadModel *model=[[NetworkingDownloadModel alloc]init];
     model.success = success;
     model.failure = failure;
-    model.url = request.url;
+    model.url=request.url;
     if(request.filePath)
     {
         BOOL isDirectory = [self createCacheDirectory:request.filePath];
         model.filePath=request.filePath;
         model.isDirectory=isDirectory;
     }
-    NSURL *url = [NSURL URLWithString:request.url];
+
+    NSURL *url = [NSURL URLWithString:model.url];
     NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
     NSUInteger taskIdentifier = [self getArc4Random];
     
@@ -115,7 +116,7 @@
     NSLog(@"datatask -- %@",dictM);
     [dictM enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
         NSURLSessionDownloadTask *task1 = obj;
-        if ([task1.response.URL.absoluteString isEqualToString:request.url]) {
+        if ([[[task1.response.URL.absoluteString stringByRemovingPercentEncoding] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]] isEqualToString:model.url]) {
             isHaveTask=YES;
             task = task1;
         }

@@ -9,7 +9,10 @@
 #import "NetworkingDownloadModel.h"
 
 @implementation NetworkingDownloadModel
-
+-(void)setUrl:(NSString *)url
+{
+    _url=[[url stringByRemovingPercentEncoding]stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+}
 @end
 @implementation NetworkingProgressModel
 
