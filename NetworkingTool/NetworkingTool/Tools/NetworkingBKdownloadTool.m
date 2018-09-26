@@ -132,7 +132,7 @@
     }else
     {
         task = [self.session downloadTaskWithRequest:req];
-        model.taskId=task.taskIdentifier;
+        model.taskId=taskIdentifier;
         model.bkTask = task;
         [task setValue:@(taskIdentifier) forKeyPath:@"taskIdentifier"];
         [self.downloadModels setObject:model forKey:@(task.taskIdentifier).stringValue];

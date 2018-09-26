@@ -44,7 +44,7 @@
 //    }];
     [kNetworkingBKdownloadTool sendDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
         //request.url=@"http://video.yueshichina.com/video/2016/0812/pengyuyan.mp4";
-        request.url=@"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1537864820569&di=0d448c7f68f8d2f3f24d8747d2af69d4&imgtype=0&src=http%3A%2F%2Fimages6.fanpop.com%2Fimage%2Fphotos%2F40400000%2FOne-Piece-maouki-40446148-2000-1000.jpg";
+        request.url=@"http://static.animetaste.net/wp-content/uploads/2015/08/标题.jpg";
         
         NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"UserDownLoads/MyVideo"];
         request.filePath=path;
@@ -60,7 +60,7 @@
     } failure:^(NSError *error) {
         
     }];
-    //return;
+    return;
     [kNetworkingBKdownloadTool sendDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
         request.url=@"http://video.yueshichina.com/video/2016/0812/youzi.mp4";
         NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"UserDownLoads/MyVideo"];
