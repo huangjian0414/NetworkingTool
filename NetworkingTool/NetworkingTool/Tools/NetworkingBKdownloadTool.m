@@ -21,6 +21,9 @@
 #define UserCachesDirectory [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"UserDownLoads"]
 
 @interface NetworkingBKdownloadTool ()<NSURLSessionDownloadDelegate>
+{
+    dispatch_semaphore_t _lock;
+}
 @property (nonatomic, strong, nullable) NSOperationQueue *downloadQueue;
 
 @property (nonatomic, strong, nullable) NSOperationQueue *downloadRecieveQueue;
@@ -89,6 +92,13 @@
     }) ;
     
     return singleClass ;
+}
+-(instancetype)init
+{
+    if (self=[super init]) {
+        _lock = dispatch_semaphore_create(1);
+    }
+    return self;
 }
 //MARK: - 有进度 下载
 -(void)sendDownLoadRequest:(NetworkingRequest *)request success:(DownLoadSuccess)success failure:(DownLoadFailure)failure
@@ -208,14 +218,12 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
 //            }
 //        });
     }
-    [self.downLoadlock lock];
+    
+    dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER);
     if ([self.downloadModels objectForKey:@(task.taskIdentifier).stringValue]) {
         [self.downloadModels removeObjectForKey:@(task.taskIdentifier).stringValue];
     }
-    [self.downLoadlock unlock];
-    
-    
-    
+    dispatch_semaphore_signal(_lock);
 }
 -(void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session
 {

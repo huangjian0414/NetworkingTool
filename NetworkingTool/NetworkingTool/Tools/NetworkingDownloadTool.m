@@ -13,6 +13,9 @@
 #define UserCachesDirectory [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"UserDownLoads"]
 
 @interface NetworkingDownloadTool ()<NSURLSessionDataDelegate>
+{
+    dispatch_semaphore_t _lock;
+}
 @property (nonatomic, strong, nullable) NSOperationQueue *downloadQueue;
 
 @property (nonatomic, strong, nullable) NSOperationQueue *noProgressDownloadQueue;
@@ -70,8 +73,14 @@
         noProgressDownloadQueue.name=@"noProgressDownload_queue";
         instance.noProgressDownloadQueue=noProgressDownloadQueue;
     });
-    
     return instance;
+}
+-(instancetype)init
+{
+    if (self=[super init]) {
+        _lock = dispatch_semaphore_create(1);
+    }
+    return self;
 }
 
 //MARK: - 无进度下载
@@ -280,11 +289,11 @@
             }
         });
     }
-    [self.downLoadlock lock];
+    dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER);
     if ([self.downloadModels objectForKey:@(task.taskIdentifier).stringValue]) {
         [self.downloadModels removeObjectForKey:@(task.taskIdentifier).stringValue];
     }
-    [self.downLoadlock unlock];
+    dispatch_semaphore_signal(_lock);
 }
 
 //MARK: - 获取随机数

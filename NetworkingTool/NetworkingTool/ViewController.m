@@ -42,76 +42,76 @@
 //    } failure:^(NSError *error) {
 //
 //    }];
-    [kNetworkingBKdownloadTool sendDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
-        //request.url=@"http://video.yueshichina.com/video/2016/0812/pengyuyan.mp4";
-        request.url=@"http://static.animetaste.net/wp-content/uploads/2015/08/标题.jpg";
-        
-        NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"UserDownLoads/MyVideo"];
-        request.filePath=path;
-    }] success:^(NSURL *location, NetworkingProgressModel *model) {
-        if (location) {
-            //下载完成
-            NSLog(@"下载完成-- %@",location.path);
-        }else
-        {
-            self.firstSlider.value = model.progress;
-
-        }
-    } failure:^(NSError *error) {
-        
-    }];
-    return;
-    [kNetworkingBKdownloadTool sendDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
-        request.url=@"http://video.yueshichina.com/video/2016/0812/youzi.mp4";
-        NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"UserDownLoads/MyVideo"];
-        request.filePath=path;
-    }] success:^(NSURL *location, NetworkingProgressModel *model) {
-        if (location) {
-            //下载完成
-            NSLog(@"下载完成-- %@",location.path);
-        }else
-        {
-            self.secondSlider.value = model.progress;
-           
-        }
-    } failure:^(NSError *error) {
-        
-    }];
-    return;
-//    [kNetworkingDownloadTool sendBigDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
-//        request.url = @"http://video.yueshichina.com/video/2016/0812/pengyuyan.mp4";
+//    [kNetworkingBKdownloadTool sendDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
+//        //request.url=@"http://video.yueshichina.com/video/2016/0812/pengyuyan.mp4";
+//        request.url=@"http://static.animetaste.net/wp-content/uploads/2015/08/标题.jpg";
 //
 //        NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"UserDownLoads/MyVideo"];
 //        request.filePath=path;
 //    }] success:^(NSURL *location, NetworkingProgressModel *model) {
-//        NSLog(@"1111111--%@--%lf",location,model.progress);
 //        if (location) {
 //            //下载完成
+//            NSLog(@"下载完成-- %@",location.path);
 //        }else
 //        {
 //            self.firstSlider.value = model.progress;
-//            self.taskID = model.taskId;
+//
 //        }
 //    } failure:^(NSError *error) {
-//        NSLog(@"--- %@",error);
+//
 //    }];
 //    return;
-//    [kNetworkingDownloadTool sendBigDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
-//        request.url = @"http://video.yueshichina.com/video/2016/0812/youzi.mp4";
+//    [kNetworkingBKdownloadTool sendDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
+//        request.url=@"http://video.yueshichina.com/video/2016/0812/youzi.mp4";
 //        NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"UserDownLoads/MyVideo"];
 //        request.filePath=path;
 //    }] success:^(NSURL *location, NetworkingProgressModel *model) {
 //        if (location) {
 //            //下载完成
+//            NSLog(@"下载完成-- %@",location.path);
 //        }else
 //        {
 //            self.secondSlider.value = model.progress;
-//            //self.taskID = model.taskId;
+//
 //        }
 //    } failure:^(NSError *error) {
 //
 //    }];
-//
+//    return;
+    [kNetworkingDownloadTool sendBigDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
+        request.url = @"http://video.yueshichina.com/video/2016/0812/pengyuyan.mp4";
+
+        NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"UserDownLoads/MyVideo"];
+        request.filePath=path;
+    }] success:^(NSURL *location, NetworkingProgressModel *model) {
+        NSLog(@"1111111--%@--%lf",location,model.progress);
+        if (location) {
+            //下载完成
+        }else
+        {
+            self.firstSlider.value = model.progress;
+            self.taskID = model.taskId;
+        }
+    } failure:^(NSError *error) {
+        NSLog(@"--- %@",error);
+    }];
+    //return;
+    [kNetworkingDownloadTool sendBigDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
+        request.url = @"http://video.yueshichina.com/video/2016/0812/youzi.mp4";
+        NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"UserDownLoads/MyVideo"];
+        request.filePath=path;
+    }] success:^(NSURL *location, NetworkingProgressModel *model) {
+        if (location) {
+            //下载完成
+        }else
+        {
+            self.secondSlider.value = model.progress;
+            //self.taskID = model.taskId;
+        }
+    } failure:^(NSError *error) {
+
+    }];
+
 //    [kNetworkingDownloadTool sendBigDownLoadRequest:[NetworkingRequest setUpRequest:^(NetworkingRequest *request) {
 //        request.url = @"http://video.yueshichina.com/video/2016/0812/liaofan.mp4";
 //        NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"UserDownLoads/MyVideo"];
