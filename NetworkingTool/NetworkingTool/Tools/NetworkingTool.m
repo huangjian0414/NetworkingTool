@@ -183,7 +183,7 @@
 {
     NSMutableString *result = [NSMutableString string];
     [param enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-        NSString *str = [NSString stringWithFormat:@"%@=%@&",key,obj];
+        NSString *str = [NSString stringWithFormat:@"%@=%@&",[self transferredWithString:key],[self transferredWithString:[NSString stringWithFormat:@"%@",obj]]];
         
         [result appendString:str];
     }];
@@ -192,6 +192,14 @@
     }
     return [result substringWithRange:NSMakeRange(0, result.length-1)];
     
+}
+//参数特殊字符转义
+-(NSString *)transferredWithString:(NSString *)string
+{
+    NSString *charactersToEscape = @"?!@#$^&%*+,:;='\"`<>()[]{}/\\| ";
+    NSCharacterSet *allowedCharacters = [[NSCharacterSet characterSetWithCharactersInString:charactersToEscape] invertedSet];
+    NSString *encodedUrl = [string stringByAddingPercentEncodingWithAllowedCharacters:allowedCharacters];
+    return encodedUrl;
 }
 //MARK: 统一处理需求
 -(void)requestUnifiedProcessingOnSuccess:(Success)success onFailure:(Failure)failure
