@@ -157,11 +157,16 @@
     }else
     {
         if (response.statusCode!=200) {
+            NSError *err=[NSError errorWithDomain:response.URL.absoluteString code:response.statusCode userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"%@,%@",[NSHTTPURLResponse localizedStringForStatusCode:response.statusCode],[response allHeaderFields]]}];
+
             if (self.failure) {
-                self.failure([NSError errorWithDomain:response.URL.absoluteString code:response.statusCode userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"%@,%@",[NSHTTPURLResponse localizedStringForStatusCode:response.statusCode],[response allHeaderFields]]}]);
+                self.failure(err);
             }
             if (failure) {
-                failure([NSError errorWithDomain:response.URL.absoluteString code:response.statusCode userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"%@,%@",[NSHTTPURLResponse localizedStringForStatusCode:response.statusCode],[response allHeaderFields]]}]);
+                failure(err);
+            }
+            if (self.showRequestLog) {
+                NSLog(@"\n============ [NetworkingResponse Error] ===========\nresponse data: \n%@\n==========================================\n", err);
             }
             return;
         }
@@ -184,7 +189,17 @@
     NSMutableString *result = [NSMutableString string];
     [param enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
         NSString *str = [NSString stringWithFormat:@"%@=%@&",[self transferredWithString:key],[self transferredWithString:[NSString stringWithFormat:@"%@",obj]]];
-        
+        if ([obj isKindOfClass:[NSString class]]) {
+            NSData *jsonData = [obj dataUsingEncoding:NSUTF8StringEncoding];
+            NSError *err;
+            id dic = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                     options:NSJSONReadingMutableContainers
+                                                       error:&err];
+            if (dic) {
+                str=[NSString stringWithFormat:@"%@=%@&",[self transferredWithString:key],obj];
+            }
+        }
+
         [result appendString:str];
     }];
     if (result.length==0) {
@@ -233,7 +248,22 @@
             break;
     }
 }
-
+//检测代理，防抓包。
+- (BOOL)checkProxySetting {
+    NSDictionary *proxySettings = (__bridge NSDictionary *)(CFNetworkCopySystemProxySettings());
+    NSArray *proxies = (__bridge NSArray *)(CFNetworkCopyProxiesForURL((__bridge CFURLRef _Nonnull)([NSURL URLWithString:@"https://www.baidu.com"]), (__bridge CFDictionaryRef _Nonnull)(proxySettings)));
+    NSDictionary *settings = proxies[0];
+    CFRelease((__bridge void *)proxies);
+    CFRelease((__bridge void *)proxySettings);
+    if ([[settings objectForKey:(NSString *)kCFProxyTypeKey] isEqualToString:@"kCFProxyTypeNone"]||[[settings objectForKey:(NSString *)kCFProxyHostNameKey] isEqualToString:@"localhost"]||[[settings objectForKey:(NSString *)kCFProxyTypeKey] isEqualToString:@"kCFProxyTypeAutoConfigurationURL"])
+    {
+        return NO;
+    }
+    else
+    {
+        return YES;
+    }
+}
 
 @end
 
