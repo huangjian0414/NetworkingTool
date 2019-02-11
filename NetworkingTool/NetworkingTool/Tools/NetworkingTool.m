@@ -84,7 +84,8 @@
 //MARK:Request配置
 -(void)setUpRequest:(NSMutableURLRequest *)request networkingRequest:(NetworkingRequest *)networkingRequest
 {
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    //[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:@"application/json; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     if (self.generalHeaders) {
         [self.generalHeaders enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
             [request setValue:obj forHTTPHeaderField:key];
@@ -110,9 +111,34 @@
         NSData *jsonData;
         if (networkingRequest.params &&[NSJSONSerialization isValidJSONObject:networkingRequest.params]&&networkingRequest.params.count>0) {
             jsonData = [[self dealWithParam:networkingRequest.params] dataUsingEncoding:NSUTF8StringEncoding];
+            if ([[request.allHTTPHeaderFields objectForKey:@"Content-Type"] isEqualToString:@"application/json; charset=utf-8"]) {
+                jsonData = [[self convertToJsonData:networkingRequest.params] dataUsingEncoding:NSUTF8StringEncoding];
+            }
             [request  setHTTPBody:jsonData];
         }
     }
+}
+-(NSString *)convertToJsonData:(NSDictionary *)dict
+{
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *jsonString;
+    if (!jsonData) {
+        if (self.showRequestLog) {
+            NSLog(@"%@",error);
+        }
+        return @"";
+    }else{
+        jsonString = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+    NSMutableString *mutStr = [NSMutableString stringWithString:jsonString];
+    NSRange range = {0,jsonString.length};
+    //去掉字符串中的空格
+    [mutStr replaceOccurrencesOfString:@" " withString:@"" options:NSLiteralSearch range:range];
+    NSRange range2 = {0,mutStr.length};
+    //去掉字符串中的换行符
+    [mutStr replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:range2];
+    return mutStr;
 }
 
 //MARK: 获取url
