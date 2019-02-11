@@ -16,8 +16,8 @@ typedef NS_ENUM(NSInteger,Request_Type)
     HttpMethod_DELETE
 };
 @interface NetworkingRequest : NSObject
-@property (nonatomic,copy)NSString *url;
-@property (nonatomic,copy)NSString *api;
+@property (nonatomic,copy)NSString *url;//完整接口地址 会忽略api
+@property (nonatomic,copy)NSString *api;//接口地址，会拼接host
 @property(nonatomic,strong) NSDictionary *params;
 @property(nonatomic,strong) NSDictionary *headers;
 
@@ -25,7 +25,7 @@ typedef NS_ENUM(NSInteger,Request_Type)
 @property (nonatomic,copy)NSString *filePath;
 @property NSTimeInterval timeout;
 
-@property (nonatomic,assign)Request_Type type;
+@property (nonatomic,assign)Request_Type type;//请求方法
 //Request配置
 +(NetworkingRequest *)setUpRequest:(void(^)(NetworkingRequest *request))block;
 @end
