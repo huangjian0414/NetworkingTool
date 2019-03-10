@@ -1,5 +1,5 @@
 # NetworkingTool
-原生自用网络请求
+原生自用网络请求（仿XMNetworking）
 
 
 
