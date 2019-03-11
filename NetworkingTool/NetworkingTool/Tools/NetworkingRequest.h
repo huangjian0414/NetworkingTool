@@ -20,12 +20,17 @@ typedef NS_ENUM(NSInteger,Request_Type)
 @property (nonatomic,copy)NSString *api;//接口地址，会拼接host
 @property(nonatomic,strong) NSDictionary *params;
 @property(nonatomic,strong) NSDictionary *headers;
+@property (nonatomic,assign)Request_Type type;//请求方法
+@property NSTimeInterval timeout;
+
 
 //文件存储的文件夹路径(下载)
 @property (nonatomic,copy)NSString *filePath;
-@property NSTimeInterval timeout;
 
-@property (nonatomic,assign)Request_Type type;//请求方法
+//上传图片
+@property (nonatomic,copy)NSString *uploadBoundary;
+@property (nonatomic,copy)NSString *fileName;
+
 //Request配置
 +(NetworkingRequest *)setUpRequest:(void(^)(NetworkingRequest *request))block;
 @end

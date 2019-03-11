@@ -12,7 +12,7 @@
 //
 
 #import "NetworkingUploadTool.h"
-
+#import "NetworkingTool.h"
 @interface NetworkingUploadTool ()<NSURLSessionTaskDelegate>
 
 @end
@@ -28,104 +28,114 @@
     
     return singleClass ;
 }
-//第1种方式 以流的方式上传
--(void)uploadFileWithData:(NSData *)fileData{
-    // 1.创建url
-    NSString *urlString = @"http://服务端/upload.jpg";
-    NSURL *url = [NSURL URLWithString:urlString];
-
-    // 2.创建请求
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    // 文件上传使用post
-    request.HTTPMethod = @"POST";
-    
-    // 3.开始上传   request的body data将被忽略，而由fromData提供
-    [[[NSURLSession sharedSession] uploadTaskWithRequest:request fromData:fileData completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        if (error == nil) {
-            NSLog(@"upload success：%@",[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-        } else {
-            NSLog(@"upload error:%@",error);
-        }
-    }] resume];
-}
-//第2种方式 拼接表单的方式进行上传
-- (void)uploadWithFilePath:(NSString *)filePath withfileName:(NSString *)fileName {
-    // 1.创建url
-    NSString *urlString = @"http://服务器/upload.jpg";
-    urlString = [urlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]];
-    NSURL *url = [NSURL URLWithString:urlString];
-    
-    // 2.创建请求
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    // 文件上传使用post
-    request.HTTPMethod = @"POST";
-    
-    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",@"boundary"];
-    
-    [request setValue:contentType forHTTPHeaderField:@"Content-Type"];
-    // 3.拼接表单，大小受MAX_FILE_SIZE限制(2MB)  FilePath:要上传的本地文件路径  formName:表单控件名称，应于服务器一致
-    NSData* data = [self getHttpBodyWithFilePath:filePath formName:@"file" reName:fileName];
-    request.HTTPBody = data;
-    // 根据需要是否提供，非必须,如果不提供，session会自动计算
-    [request setValue:[NSString stringWithFormat:@"%lu",data.length] forHTTPHeaderField:@"Content-Length"];
-    
-    // 4 开始上传 使用uploadTask   fromData:可有可无，会被忽略
-    [[[NSURLSession sharedSession] uploadTaskWithRequest:request fromData:nil completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        if (error == nil) {
-            NSLog(@"upload success：%@",[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-        } else {
-            NSLog(@"upload error:%@",error);
-        }
-    }] resume];
-}
-
-/// filePath:要上传的文件路径   formName：表单控件名称  reName：上传后文件名
-- (NSData *)getHttpBodyWithFilePath:(NSString *)filePath formName:(NSString *)formName reName:(NSString *)reName
+// 以流的方式上传
+//-(void)uploadFileWithData:(NSData *)fileData{
+//    // 1.创建url
+//    NSString *urlString = @"http://服务端/upload.jpg";
+//    NSURL *url = [NSURL URLWithString:urlString];
+//
+//    // 2.创建请求
+//    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+//    // 文件上传使用post
+//    request.HTTPMethod = @"POST";
+//
+//    // 3.开始上传   request的body data将被忽略，而由fromData提供
+//    [[[NSURLSession sharedSession] uploadTaskWithRequest:request fromData:fileData completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+//        if (error == nil) {
+//            NSLog(@"upload success：%@",[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+//        } else {
+//            NSLog(@"upload error:%@",error);
+//        }
+//    }] resume];
+//}
+-(void)sendUpload:(NetworkingRequest *)request success:(UpLoadSuccess)success failure:(UpLoadFailure)failure
 {
-    NSMutableData *data = [NSMutableData data];
-    NSURLResponse *response = [self getLocalFileResponse:filePath];
-    // 文件类型：MIMEType  文件的大小：expectedContentLength  文件名字：suggestedFilename
-    NSString *fileType = response.MIMEType;
-    
-    // 如果没有传入上传后文件名称,采用本地文件名!
-    if (reName == nil) {
-        reName = response.suggestedFilename;
+    if (request.timeout<=0||request.timeout>90) {
+        request.timeout=kNetworkingTool.timeoutInterval;
     }
+    //上传请求
+    NSMutableURLRequest *imgRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:request.url] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:request.timeout];
+    [imgRequest setHTTPMethod:@"POST"];
     
-    // 表单拼接
-    NSMutableString *headerStrM =[NSMutableString string];
-    [headerStrM appendFormat:@"--%@\r\n",@"boundary"];
-    // name：表单控件名称  filename：上传文件名
-    [headerStrM appendFormat:@"Content-Disposition: form-data; name=%@; filename=%@\r\n",formName,reName];
-    [headerStrM appendFormat:@"Content-Type: %@\r\n\r\n",fileType];
-    [data appendData:[headerStrM dataUsingEncoding:NSUTF8StringEncoding]];
+    for (NSString *key in request.headers) {
+        [imgRequest setValue:[request.headers objectForKey:key] forHTTPHeaderField:key];
+    }
+    //设请求头信息
+    [imgRequest setValue:[NSString stringWithFormat:@"multipart/form-data; boundary=%@",request.uploadBoundary] forHTTPHeaderField:@"Content-Type"];
     
-    // 文件内容
-    NSData *fileData = [NSData dataWithContentsOfFile:filePath];
-    [data appendData:fileData];
+    NSMutableData* postData = [NSMutableData data];
+    if (!request.fileName) {
+        // 设置上传的名字   filename 需要
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        formatter.dateFormat = @"yyyyMMddHHmmss";
+        NSString *imgNameStr = [formatter stringFromDate:[NSDate date]];
+        NSString *fileName = [NSString stringWithFormat:@"%@.png", imgNameStr];
+        request.fileName=fileName;
+    }
+    NSDictionary *params=request.params;
+    for (NSString *key in params) {
+        NSString *pair=@"";
+        id value = [params objectForKey:key];
+        if ([value isKindOfClass:[NSString class]]) {
+            pair=[NSString stringWithFormat:@"--%@\r\nContent-Disposition: form-data; name=\"%@\"\r\n\r\n",request.uploadBoundary,key];
+            [postData appendData:[pair dataUsingEncoding:NSUTF8StringEncoding]];
+            [postData appendData:[value dataUsingEncoding:NSUTF8StringEncoding]];
+        }else if ([value isKindOfClass:[NSData class]]){
+            pair=[NSString stringWithFormat:@"--%@\r\nContent-Disposition: form-data; name=\"%@\";filename=\"%@\"\r\nContent-Type: image/png, image/jpeg, image/jpeg, image/pjpeg, image/pjpeg\r\n\r\n",request.uploadBoundary,key,request.fileName];
+            [postData appendData:[pair dataUsingEncoding:NSUTF8StringEncoding]];
+            [postData appendData:value];
+        }
+        [postData appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    [postData appendData:[[NSString stringWithFormat:@"--%@--\r\n",request.uploadBoundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    imgRequest.HTTPBody = postData;
     
-    NSMutableString *footerStrM = [NSMutableString stringWithFormat:@"\r\n--%@--\r\n",@"boundary"];
-    [data appendData:[footerStrM  dataUsingEncoding:NSUTF8StringEncoding]];
-    //    NSLog(@"dataStr=%@",[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-    return data;
+    //设置Content-Length
+    [imgRequest setValue:[NSString stringWithFormat:@"%ld", (unsigned long)[postData length]]
+      forHTTPHeaderField:@"Content-Length"];
+    
+    // URLSession
+    NSURLSession *session = [NSURLSession sharedSession];
+    // 上传任务
+    NSURLSessionUploadTask *task = [session uploadTaskWithRequest:imgRequest fromData:nil completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSHTTPURLResponse *re=(NSHTTPURLResponse *)response;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self dealResponseWithData:data response:re error:error success:success failure:failure];
+        });
+    }];
+    //开始请求
+    [task resume];
 }
-/// 获取响应，主要是文件类型和文件名
-- (NSURLResponse *)getLocalFileResponse:(NSString *)urlString
+//MARK: 处理请求回调
+-(void)dealResponseWithData:(NSData *)data response:(NSHTTPURLResponse *)response error:(NSError *)error success:(UpLoadSuccess)success failure:(UpLoadFailure)failure
 {
-    urlString = [urlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]];
-    // 本地文件请求
-    NSURL *url = [NSURL fileURLWithPath:urlString];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    
-    __block NSURLResponse *localResponse = nil;
-    // 使用信号量实现NSURLSession同步请求
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    [[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        localResponse = response;
-        dispatch_semaphore_signal(semaphore);
-    }] resume];
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    return  localResponse;
+    if (error) {
+        if (failure) {
+            failure(error);
+            if (kNetworkingTool.showRequestLog) {
+                NSLog(@"\n============ [UploadResponse Error] ===========\nresponse data: \n%@\n==========================================\n", error);
+            }
+        }
+    }else
+    {
+        if (response.statusCode!=200) {
+            NSError *err=[NSError errorWithDomain:response.URL.absoluteString code:response.statusCode userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"%@,%@",[NSHTTPURLResponse localizedStringForStatusCode:response.statusCode],[response allHeaderFields]]}];
+            if (failure) {
+                failure(err);
+            }
+            if (kNetworkingTool.showRequestLog) {
+                NSLog(@"\n============ [UploadResponse Error] ===========\nresponse data: \n%@\n==========================================\n", err);
+            }
+            return;
+        }
+        id  jsonData = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+        if (success) {
+            success(jsonData);
+            if (kNetworkingTool.showRequestLog) {
+                NSLog(@"\n============ [UploadResponse Data] ===========\nrequest url: %@\nresponse data: \n%@\n==========================================\n", response.URL.absoluteString,jsonData);
+            }
+        }
+    }
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend

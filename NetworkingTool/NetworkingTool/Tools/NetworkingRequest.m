@@ -16,6 +16,7 @@
 {
     if (self=[super init]) {
         self.type=HttpMethod_POST;
+        self.uploadBoundary=@"AxlkioImgMQqtt008B03x";
     }
     return self;
 }
