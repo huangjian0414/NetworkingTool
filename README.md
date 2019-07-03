@@ -1,5 +1,5 @@
 # NetworkingTool
-原生自用网络请求（仿XMNetworking）
+原生网络请求（仿XMNetworking）支持GET,POST,PUT,DELETE ,下载,断点下载,后台下载,上传
 
 
 
